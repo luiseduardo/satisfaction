@@ -332,7 +332,7 @@ class PluginSatisfactionSurveyAnswer extends CommonDBChild
                             $target->data['##lang.satisfaction.ticket_url##']    = __('Url for direct access a Satisfaction Survey', 'satisfaction');
 
                             $target->data['##satisfaction.question##'] = $data;
-                            $target->data['##satisfaction.ticket_url##'] = $CFG_GLPI["url_base"] . 'plugins/satisfaction/apisatisfaction.php?t=' . base64_encode('{"ticket_id":"' . $tickets_id . '","satisfaction_id":"' . $plugin_satisfaction_surveys_id . '"}');
+                            $target->data['##satisfaction.ticket_url##'] = $CFG_GLPI["url_base"] . '/plugins/satisfaction/apisatisfaction.php?t=' . base64_encode('{"ticket_id":"' . $tickets_id . '","satisfaction_id":"' . $plugin_satisfaction_surveys_id . '"}');
 
                             break;
 
@@ -357,7 +357,7 @@ class PluginSatisfactionSurveyAnswer extends CommonDBChild
                             $target->data['##lang.satisfaction.ticket_url##']    = __('Url for direct access a Satisfaction Survey', 'satisfaction');
 
                             $target->data['##satisfaction.answer##'] = $data;
-                            $target->data['##satisfaction.ticket_url##'] = $CFG_GLPI["url_base"] . 'plugins/satisfaction/apisatisfaction.php?t=' . base64_encode('{"ticket_id":"' . $tickets_id . '","satisfaction_id":"' . $plugin_satisfaction_surveys_id . '"}');
+                            $target->data['##satisfaction.ticket_url##'] = $CFG_GLPI["url_base"] . '/plugins/satisfaction/apisatisfaction.php?t=' . base64_encode('{"ticket_id":"' . $tickets_id . '","satisfaction_id":"' . $plugin_satisfaction_surveys_id . '"}');
 
                             break;
                     }
