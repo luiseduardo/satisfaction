@@ -33,6 +33,8 @@
 
 use Glpi\Event;
 
+global $CFG_GLPI;
+
 include('../../inc/includes.php');
 $ticket_satisfaction = json_decode(base64_decode($_GET['t']));
 
@@ -91,7 +93,7 @@ Html::includeHeader();
     /* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */
 </style>
 <div id="page">
-    <form name="form" method="post" action="/front/ticketsatisfaction.form.php" enctype="multipart/form-data">
+    <form name="form" method="post" action="<?php echo $CFG_GLPI["url_base"]?>/front/ticketsatisfaction.form.php" enctype="multipart/form-data">
         <input type="hidden" name="plugin_satisfaction_surveys_id" value="<?php echo $ticket_satisfaction->satisfaction_id ?>">
         <input type="hidden" name="tickets_id" value="<?php echo $ticket_satisfaction->ticket_id ?>">
         <div class="spaced" id="tabsbody">
