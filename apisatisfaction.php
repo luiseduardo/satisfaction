@@ -65,7 +65,7 @@ if ($_POST) {
 
     // save satisfaction
     if ($satisfaction->getFromDB($ticket_satisfaction->ticket_id)) {
-        if (!is_null($satisfaction->fields['date_answered'])) {
+        if (is_null($satisfaction->fields['date_answered'])) {
             $data = [];
             $data['satisfaction'] = $ticket_satisfaction->star;
             $data['tickets_id'] = $ticket_satisfaction->ticket_id;
