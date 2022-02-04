@@ -101,7 +101,7 @@ class PluginSatisfactionReminder extends CommonDBTM {
       $result = $DB->query($query);
 
       if ($DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $ticketSatisfactions[] = $data;
          }
       }
@@ -241,9 +241,9 @@ class PluginSatisfactionReminder extends CommonDBTM {
                   PluginSatisfactionNotificationTargetTicket::sendReminder($ticketSatisfaction['tickets_id']);
                   $self = new self();
                   $self->add([
-                                'type'        => $potentialReminderToSendDates[0]['type'],
-                                'tickets_id'  => $ticketSatisfaction['tickets_id'],
-                                'date'        => $dateNow
+                                'type'       => $potentialReminderToSendDates[0]['type'],
+                                'tickets_id' => $ticketSatisfaction['tickets_id'],
+                                'date'       => $dateNow
                              ]);
                }
             }

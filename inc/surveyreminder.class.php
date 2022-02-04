@@ -133,7 +133,7 @@ class PluginSatisfactionSurveyReminder extends CommonDBChild {
             self::PREDEFINED_REMINDER_OPTION_NAME => 1
          ];
          Ajax::updateItemJsCode("viewreminder$sID$rand_survey",
-                                $CFG_GLPI["root_doc"] . "/plugins/satisfaction/ajax/viewsubitem_reminder.php", $params);
+                                 Plugin::getWebDir('satisfaction') . "/ajax/viewsubitem_reminder.php", $params);
          echo "};";
 
          echo "</script>\n";
@@ -149,7 +149,7 @@ class PluginSatisfactionSurveyReminder extends CommonDBChild {
       }
 
       // Dispaly an option to setup 
-      echo "<form name='form' method='post' action='/glpi/plugins/satisfaction/front/survey.form.php'>";
+      echo "<form name='form' method='post'>";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_2'>";
       echo "<th class='b' colspan='2'>" . __('Setup maximum number of days to send reminder', 'satisfaction') . "</th>";
       echo "<tr class='tab_bg_1'><td>" . __('Maximum number of days to send reminder', 'satisfaction') . "</td>";

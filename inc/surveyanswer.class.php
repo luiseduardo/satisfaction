@@ -3,107 +3,107 @@
 /**
  * Class PluginSatisfactionSurveyAnswer
  */
-class PluginSatisfactionSurveyAnswer extends CommonDBChild
-{
+class PluginSatisfactionSurveyAnswer extends CommonDBChild {
 
-    static $rightname = "plugin_satisfaction";
-    public $dohistory = true;
+   static $rightname = "plugin_satisfaction";
+   public $dohistory = true;
 
-    // From CommonDBChild
-    public static $itemtype = 'PluginSatisfactionSurvey';
-    public static $items_id = 'plugin_satisfaction_surveys_id';
+   // From CommonDBChild
+   public static $itemtype = 'PluginSatisfactionSurvey';
+   public static $items_id = 'plugin_satisfaction_surveys_id';
 
-    /**
-     * Return the localized name of the current Type
-     * Should be overloaded in each new class
-     *
-     * @return string
-     **/
-    static function getTypeName($nb = 0)
-    {
-        return _n('Answer', 'Answers', $nb, 'satisfaction');
-    }
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @return string
+    **/
+   static function getTypeName($nb = 0) {
+      return _n('Answer', 'Answers', $nb, 'satisfaction');
+   }
 
 
-    /**
-     * Get Tab Name used for itemtype
-     *
-     * NB : Only called for existing object
-     *      Must check right on what will be displayed + template
-     *
-     * @since version 0.83
-     *
-     * @param $item                     CommonDBTM object for which the tab need to be displayed
-     * @param $withtemplate    boolean  is a template object ? (default 0)
-     *
-     *  @return string tab name
-     **/
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-    {
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @param $item                     CommonDBTM object for which the tab need to be displayed
+    * @param $withtemplate    boolean  is a template object ? (default 0)
+    *
+    * @return string tab name
+    **@since version 0.83
+    *
+    */
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-        // can exists for template
-        if ($item->getType() == 'PluginSatisfactionSurvey') {
-            return __('Preview', 'satisfaction');
-        }
+      // can exists for template
+      if ($item->getType() == 'PluginSatisfactionSurvey') {
+         echo Html::css('public/lib/jquery.rateit.css');
+         Html::requireJs('rateit');
+         return __('Preview', 'satisfaction');
+      }
 
-        return '';
-    }
+      return '';
+   }
 
 
-    /**
-     * show Tab content
-     *
-     * @since version 0.83
-     *
-     * @param $item                  CommonGLPI object for which the tab need to be displayed
-     * @param $tabnum       integer  tab number (default 1)
-     * @param $withtemplate boolean  is a template object ? (default 0)
-     *
-     * @return true
-     **/
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-    {
-        if ($item->getType() == 'PluginSatisfactionSurvey') {
-            self::showSurvey($item, true);
-        }
-        return true;
-    }
+   /**
+    * show Tab content
+    *
+    * @param $item                  CommonGLPI object for which the tab need to be displayed
+    * @param $tabnum       integer  tab number (default 1)
+    * @param $withtemplate boolean  is a template object ? (default 0)
+    *
+    * @return true
+    **@since version 0.83
+    *
+    */
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      if ($item->getType() == 'PluginSatisfactionSurvey') {
+         self::showSurvey($item, true);
 
-    /**
-     * Print survey
-     *
-     * @param \CommonGLPI $item
-     * @param bool        $preview
-     *
-     * @return bool
-     */
-    static function showSurvey(CommonGLPI $item, $preview = false)
-    {
-        //find existing answer
-        $sanswer_obj = new self();
+      }
+      return true;
+   }
 
-        if ($item instanceof TicketSatisfaction) {
-            if ($sanswer_obj->getFromDBByCrit(["ticketsatisfactions_id" => $item->getField('id')])) {
-                $survey = new PluginSatisfactionSurvey();
-                $survey->getFromDB($sanswer_obj->fields['plugin_satisfaction_surveys_id']);
+   /**
+    * Print survey
+    *
+    * @param \CommonGLPI $item
+    * @param bool        $preview
+    *
+    * @return bool
+    */
+   static function showSurvey(CommonGLPI $item, $preview = false) {
+      //find existing answer
+      $sanswer_obj = new self();
 
-                $plugin_satisfaction_surveys_id = $survey->getID();
-            } else {
-                $ticket = new Ticket();
-                $ticket->getFromDB($item->getField('tickets_id'));
+      if ($item instanceof TicketSatisfaction) {
+         if ($sanswer_obj->getFromDBByCrit(["ticketsatisfactions_id" => $item->getField('id')])) {
+            $survey = new PluginSatisfactionSurvey();
+            $survey->getFromDB($sanswer_obj->fields['plugin_satisfaction_surveys_id']);
 
-                $plugin_satisfaction_surveys_id = PluginSatisfactionSurvey::getObjectForEntity($ticket->fields['entities_id']);
+            $plugin_satisfaction_surveys_id = $survey->getID();
+         } else {
+            $ticket = new Ticket();
+            $ticket->getFromDB($item->getField('tickets_id'));
+            $entities_id = Session::getActiveEntity();
+            if (isset($ticket->fields['entities_id'])) {
+               $entities_id = $ticket->fields['entities_id'];
             }
+            $plugin_satisfaction_surveys_id = PluginSatisfactionSurvey::getObjectForEntity($entities_id);
+            }
+
         } else if ($item instanceof PluginSatisfactionSurvey) {
             $plugin_satisfaction_surveys_id = $item->getID();
         } else {
             return false;
         }
 
-        if (
-            !isset($plugin_satisfaction_surveys_id)
-            || $plugin_satisfaction_surveys_id === false
-        ) {
+        if (!isset($plugin_satisfaction_surveys_id)
+            || $plugin_satisfaction_surveys_id === false) {
             return false;
         }
 
@@ -155,14 +155,95 @@ class PluginSatisfactionSurveyAnswer extends CommonDBChild
         }
     }
 
+
+   /**
+    * Print survey
+    *
+    * @param \CommonGLPI $item
+    * @param bool        $preview
+    *
+    * @return bool
+    */
+   static function showResponsiveSurvey(CommonGLPI $item, $preview = false) {
+      //find existing answer
+      $sanswer_obj = new self();
+
+      if ($item instanceof TicketSatisfaction) {
+         if ($sanswer_obj->getFromDBByCrit(["ticketsatisfactions_id" => $item->getField('id')])) {
+            $survey = new PluginSatisfactionSurvey();
+            $survey->getFromDB($sanswer_obj->fields['plugin_satisfaction_surveys_id']);
+
+            $plugin_satisfaction_surveys_id = $survey->getID();
+         } else {
+            $ticket = new Ticket();
+            $ticket->getFromDB($item->getField('tickets_id'));
+            $entities_id = Session::getActiveEntity();
+            if (isset($ticket->fields['entities_id'])) {
+               $entities_id = $ticket->fields['entities_id'];
+            }
+            $plugin_satisfaction_surveys_id = PluginSatisfactionSurvey::getObjectForEntity($entities_id);
+         }
+
+      } else if ($item instanceof PluginSatisfactionSurvey) {
+         $plugin_satisfaction_surveys_id = $item->getID();
+      } else {
+         return false;
+      }
+
+      if (!isset($plugin_satisfaction_surveys_id)
+          || $plugin_satisfaction_surveys_id === false) {
+         return false;
+      }
+
+      if (!empty($sanswer_obj->fields['answer'])) {
+         $dbu = new DbUtils();
+         //get answer in array form
+         $sanswer_obj->fields['answer'] = $dbu->importArrayFromDB($sanswer_obj->fields['answer']);
+      }
+
+      echo "<input type='hidden' name='plugin_satisfaction_surveys_id' value='$plugin_satisfaction_surveys_id'>";
+
+      //list survey questions
+      $squestion_obj = new PluginSatisfactionSurveyQuestion;
+      foreach ($squestion_obj->find([PluginSatisfactionSurveyQuestion::$items_id => $plugin_satisfaction_surveys_id]) as $question) {
+         echo "<div class=\"form-row\">";
+
+         $name = $question['name'];
+         if (PluginSatisfactionSurveyTranslation::hasTranslation($question["plugin_satisfaction_surveys_id"], $question["id"])) {
+            $name = PluginSatisfactionSurveyTranslation::getTranslation($question["plugin_satisfaction_surveys_id"], $question["id"]);
+         }
+
+         echo "<div class=\"form-group col-md-11\">";
+         echo nl2br($name);
+         echo "</div>";
+
+         echo "<div class=\"form-group col-md-11\">";
+
+         if (isset($sanswer_obj->fields['answer'][$question['id']])) {
+            $value = $sanswer_obj->fields['answer'][$question['id']];
+         } else {
+            if ($question['type'] == PluginSatisfactionSurveyQuestion::TEXTAREA) {
+               $value = '';
+            } else if ($question['type'] == PluginSatisfactionSurveyQuestion::NOTE) {
+               $value = $question['default_value'];
+            } else {
+               $value = 0;
+            }
+         }
+         self::displayAnswer($question, $value);
+         echo "</div>";
+
+         echo "</div>";
+      }
+   }
+
     /**
      * Display answer by type
      *
      * @param     $question
      * @param int $value
      */
-    static function displayAnswer($question, $value = 0)
-    {
+    static function displayAnswer($question, $value = 0){
         $questions_id = $question['id'];
 
         switch ($question['type']) {
@@ -181,16 +262,16 @@ class PluginSatisfactionSurveyAnswer extends CommonDBChild
         }
     }
 
+
     /**
      * Star display
      *
      * @param     $question
      * @param int $value
      */
-    static function showStarAnswer($question, $value = 0)
-    {
-        echo Html::css('lib/jqueryplugins/rateit/rateit.css');
-        Html::requireJs('rateit');
+    static function showStarAnswer($question, $value = 0){
+        //echo Html::css('lib/jqueryplugins/rateit/rateit.css');
+        //Html::requireJs('rateit');
 
         $questions_id = $question['id'];
         $number = $question['number'];

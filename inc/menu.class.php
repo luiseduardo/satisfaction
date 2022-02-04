@@ -22,16 +22,23 @@ class PluginSatisfactionMenu extends CommonGLPI
       $menu = [];
 
       if (Session::haveRight('plugin_satisfaction', READ)) {
+         $web_dir = '/' . Plugin::getWebDir('satisfaction', false);
          $menu['title']           = self::getMenuName();
-         $menu['page']            = "/plugins/satisfaction/front/survey.php";
-         $menu['page']            = "/plugins/satisfaction/front/survey.php";
+         $menu['page']            = $web_dir."/front/survey.php";
+         $menu['page']            = $web_dir."/front/survey.php";
          $menu['links']['search'] = PluginSatisfactionSurvey::getSearchURL(false);
          if (PluginSatisfactionSurvey::canCreate()) {
             $menu['links']['add'] = PluginSatisfactionSurvey::getFormURL(false);
          }
       }
 
+      $menu['icon'] = self::getIcon();
+
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-thumbs-up";
    }
 
    static function removeRightsFromSession() {
